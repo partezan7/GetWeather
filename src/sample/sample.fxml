@@ -18,8 +18,8 @@
             </Text>
          </children>
       </AnchorPane>
-      <TextField fx:id="city" layoutX="76.0" layoutY="90.0" promptText="Введите город" />
-      <Button fx:id="getData" layoutX="89.0" layoutY="140.0" mnemonicParsing="false" text="Узнать погоду" />
+      <TextField fx:id="textFieldCity" layoutX="76.0" layoutY="90.0" promptText="Введите город" />
+      <Button fx:id="buttonGetData" layoutX="89.0" layoutY="140.0" mnemonicParsing="false" text="Узнать погоду" />
       <Text fill="#30ef56" layoutX="72.0" layoutY="207.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="ИНФОРМАЦИЯ">
          <font>
             <Font size="22.0" />
