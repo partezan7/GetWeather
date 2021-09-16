@@ -6,49 +6,64 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="441.0" prefWidth="304.0" style="-fx-background-color: #333;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="360.0" style="-fx-background-color: #333;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
-      <AnchorPane prefHeight="64.0" prefWidth="301.0" style="-fx-background-color: #000;">
+      <AnchorPane prefHeight="64.0" prefWidth="360.0" style="-fx-background-color: #000;">
          <children>
-            <Text fill="#c01a1a" layoutX="89.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Погодник" textAlignment="CENTER" wrappingWidth="122.13672637939453">
+            <Text fill="RED" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GetWeather" textAlignment="CENTER" wrappingWidth="360.00000000000006">
                <font>
-                  <Font name="Blackadder ITC" size="24.0" />
+                  <Font name="DejaVu Serif Italic" size="40.0" />
                </font>
             </Text>
          </children>
       </AnchorPane>
-      <TextField fx:id="textFieldCity" layoutX="76.0" layoutY="90.0" promptText="Введите город" />
-      <Button fx:id="buttonGetData" layoutX="89.0" layoutY="140.0" mnemonicParsing="false" text="Узнать погоду" />
+      <TextField fx:id="textFieldCity" layoutY="65.0" prefHeight="38.0" prefWidth="360.0" promptText="Введите город">
+         <font>
+            <Font name="System Bold Italic" size="17.0" />
+         </font></TextField>
+      <Button fx:id="buttonGetData" layoutY="107.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="360.0" text="Узнать погоду">
+         <font>
+            <Font name="System Bold" size="26.0" />
+         </font></Button>
       <Text fill="#30ef56" layoutX="72.0" layoutY="207.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="ИНФОРМАЦИЯ">
          <font>
-            <Font size="22.0" />
+            <Font name="Georgia" size="24.0" />
          </font>
       </Text>
-      <Text fx:id="temp_info" fill="#5aed32" layoutX="21.0" layoutY="256.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Температура:">
+      <Text fx:id="temp_info" fill="#5aed32" layoutX="20.0" layoutY="250.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Температура:">
          <font>
             <Font size="22.0" />
          </font>
       </Text>
-      <Text fx:id="temp_feels" fill="#5aed32" layoutX="23.0" layoutY="285.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Ощущается:">
+      <Text fx:id="temp_feels" fill="#5aed32" layoutX="20.0" layoutY="285.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Ощущается:">
          <font>
             <Font size="22.0" />
          </font>
       </Text>
-      <Text fx:id="temp_max" fill="#5aed32" layoutX="23.0" layoutY="323.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Максимум:">
+      <Text fx:id="temp_max" fill="#5aed32" layoutX="20.0" layoutY="320.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Максимум:">
          <font>
             <Font size="22.0" />
          </font>
       </Text>
-      <Text fx:id="temp_min" fill="#5aed32" layoutX="23.0" layoutY="355.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Минимум:">
+      <Text fx:id="temp_min" fill="#5aed32" layoutX="20.0" layoutY="355.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Минимум:">
          <font>
             <Font size="22.0" />
          </font>
       </Text>
-      <Text fx:id="pressure" fill="#5aed32" layoutX="23.0" layoutY="387.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Давление:">
+      <Text fx:id="pressure" fill="#5aed32" layoutX="20.0" layoutY="390.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Давление:">
          <font>
             <Font size="22.0" />
          </font>
       </Text>
+      <Button fx:id="buttonMoscow" layoutY="408.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="360.0" text="Москва">
+         <font>
+            <Font name="System Bold" size="26.0" />
+         </font>
+      </Button>
+      <Button fx:id="buttonSpb" layoutY="472.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="360.0" text="Санкт-Петербург">
+         <font>
+            <Font name="System Bold" size="26.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

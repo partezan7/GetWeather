@@ -24,6 +24,12 @@ public class Controller {
     private Button buttonGetData;
 
     @FXML
+    private Button buttonMoscow;
+
+    @FXML
+    private Button buttonSpb;
+
+    @FXML
     private Text temp_info;
 
     @FXML
@@ -40,23 +46,28 @@ public class Controller {
 
     @FXML
     void initialize() {
-        buttonGetData.setOnAction(event -> getWeather());
+
+        buttonGetData.setOnAction(event -> getWeather(textFieldCity.getText()));
+        buttonMoscow.setOnAction(event -> getWeather(buttonMoscow.getText()));
+        buttonSpb.setOnAction(event -> getWeather(buttonSpb.getText()));
+
     }
 
-    private void getWeather() {
-        userCity = textFieldCity.getText().trim();
+
+    private void getWeather(String city) {
+        userCity = city.trim();
 
         String output = getUrlContent(
                 "http://api.openweathermap.org/data/2.5/weather?q=" +
-                userCity + "&appid=" + getAppID() + "&units=metric");
+                        userCity + "&appid=" + getAppID() + "&units=metric");
 
         if (!output.isEmpty()) {
             JSONObject obj = new JSONObject(output);
-            temp_info.setText("Температура: " + obj.getJSONObject("main").getDouble("temp"));
-            temp_feels.setText("Ощущается: " + obj.getJSONObject("main").getDouble("feels_like"));
-            temp_max.setText("Максимум: " + obj.getJSONObject("main").getDouble("temp_max"));
-            temp_min.setText("Минимум: " + obj.getJSONObject("main").getDouble("temp_min"));
-            pressure.setText("Давление: " + obj.getJSONObject("main").getDouble("pressure"));
+            temp_info.setText("Температура: " + Math.round(obj.getJSONObject("main").getDouble("temp")) + "\u00B0");
+            temp_feels.setText("Ощущается: " + Math.round(obj.getJSONObject("main").getDouble("feels_like"))+ "\u00B0");
+            temp_max.setText("Максимум: " + Math.round(obj.getJSONObject("main").getDouble("temp_max"))+ "\u00B0");
+            temp_min.setText("Минимум: " + Math.round(obj.getJSONObject("main").getDouble("temp_min"))+ "\u00B0");
+            pressure.setText("Давление: " + Math.round((obj.getJSONObject("main").getDouble("pressure")/133*100))+" мм.рт.ст.");
         }
     }
 
