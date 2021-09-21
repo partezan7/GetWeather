@@ -1,4 +1,4 @@
-package sample;
+package main.java.ru.partezan7;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../../../resources/ru/partezan7/fxml/sample.fxml"));
         primaryStage.setTitle("GetWeather");
         primaryStage.setScene(new Scene(root, 360, 600));
         primaryStage.setResizable(false);

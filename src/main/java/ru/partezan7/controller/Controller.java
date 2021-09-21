@@ -1,4 +1,4 @@
-package sample;
+package main.java.ru.partezan7.controller;
 
 import java.io.*;
 import java.net.URL;
@@ -77,7 +77,7 @@ public class Controller {
         String path = new File("").getAbsolutePath();
 
         try {
-            reader = new BufferedReader(new FileReader(new File(path + "\\src\\sample\\AppID")));
+            reader = new BufferedReader(new FileReader(new File(path + "\\src\\main\\resources\\ru\\partezan7\\AppID")));
 
             String line;
             while ((line = reader.readLine()) != null) {
