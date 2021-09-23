@@ -3,18 +3,22 @@ package main.java.ru.partezan7.controller;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.*;
+import java.util.Calendar;
 
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import main.java.ru.partezan7.util.DBjdbc;
 import org.json.JSONObject;
 
 
 public class Controller {
 
-    private static String userCity = "";
+    private static String cityName = "";
+    private static int counter = 0;
 
 
     @FXML
@@ -55,23 +59,66 @@ public class Controller {
 
 
     private void getWeather(String city) {
-        userCity = city.trim();
+        cityName = city.trim();
+        counter++;
 
-        String output = getUrlContent(
+        String response = getUrlResponse(
                 "http://api.openweathermap.org/data/2.5/weather?q=" +
-                        userCity + "&appid=" + getAppID() + "&units=metric");
+                        cityName + "&appid=" + getAppID() + "&units=metric");
 
-        if (!output.isEmpty()) {
-            JSONObject obj = new JSONObject(output);
+        if (!response.isEmpty()) {
+            JSONObject obj = new JSONObject(response);
+
             temp_info.setText("Температура: " + Math.round(obj.getJSONObject("main").getDouble("temp")) + "\u00B0");
-            temp_feels.setText("Ощущается: " + Math.round(obj.getJSONObject("main").getDouble("feels_like"))+ "\u00B0");
-            temp_max.setText("Максимум: " + Math.round(obj.getJSONObject("main").getDouble("temp_max"))+ "\u00B0");
-            temp_min.setText("Минимум: " + Math.round(obj.getJSONObject("main").getDouble("temp_min"))+ "\u00B0");
-            pressure.setText("Давление: " + Math.round((obj.getJSONObject("main").getDouble("pressure")/133*100))+" мм.рт.ст.");
+            temp_feels.setText("Ощущается: " + Math.round(obj.getJSONObject("main").getDouble("feels_like")) + "\u00B0");
+            temp_max.setText("Максимум: " + Math.round(obj.getJSONObject("main").getDouble("temp_max")) + "\u00B0");
+            temp_min.setText("Минимум: " + Math.round(obj.getJSONObject("main").getDouble("temp_min")) + "\u00B0");
+            pressure.setText("Давление: " + Math.round((obj.getJSONObject("main").getDouble("pressure") / 133 * 100)) + " мм.рт.ст.");
+
+            DBjdbc dbJDBC = new DBjdbc();
+            Connection connection = dbJDBC.getConnection();
+
+            String createTableString = "create table if not exists weatherlog (" +
+                    " weatherlog_id int not null AUTO_INCREMENT," +
+                    " city varchar(30) not null," +
+                    " temp FLOAT not null," +
+                    " pressure FLOAT not null," +
+                    " date DATE not null," +
+                    " primary key (weatherlog_ID)" +
+                    ")" +
+                    " ENGINE=MyISAM  DEFAULT  charset=utf8";
+
+
+            String INSERT_NEW = "INSERT INTO weatherlog VALUES (?,?,?,?,?)";
+            PreparedStatement preparedStatement = null;
+
+            try {
+                System.out.println(createTableString);
+                Statement statement = connection.createStatement();
+                statement.executeUpdate(createTableString);
+                preparedStatement = connection.prepareStatement(INSERT_NEW);
+                preparedStatement.setInt(1, counter);
+                preparedStatement.setString(2, city);
+                preparedStatement.setFloat(3, obj.getJSONObject("main").getFloat("temp"));
+                preparedStatement.setFloat(4, obj.getJSONObject("main").getFloat("pressure") / 133 * 100);
+                preparedStatement.setDate(5, new Date(Calendar.getInstance().getTimeInMillis()));
+                preparedStatement.execute();
+            } catch (SQLException throwables) {
+                System.out.println("SQL Exception!");
+                throwables.printStackTrace();
+            } finally {
+                try {
+                    dbJDBC.getConnection().close();
+                } catch (SQLException throwables) {
+                    System.out.println("Failed to close connection!");
+                    throwables.printStackTrace();
+                }
+            }
         }
     }
 
-    private static String getAppID() {
+
+    private String getAppID() {
         StringBuilder appID = new StringBuilder();
         BufferedReader reader = null;
         String path = new File("").getAbsolutePath();
@@ -99,22 +146,22 @@ public class Controller {
         return appID.toString();
     }
 
-    private static String getUrlContent(String urlAdress) {
-        StringBuilder content = new StringBuilder();
+    private static String getUrlResponse(String urlRequest) {
+        StringBuilder urlResponse = new StringBuilder();
         BufferedReader bufferedReader = null;
         try {
-            URL url = new URL(urlAdress);
+            URL url = new URL(urlRequest);
             URLConnection urlConnection = url.openConnection();
             bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 
             String line;
 
             while ((line = bufferedReader.readLine()) != null) {
-                content.append(line + "\n");
+                urlResponse.append(line + "\n");
             }
             bufferedReader.close();
         } catch (IOException e) {
-            System.out.println("Сity " + userCity + " not found!");
+            System.out.println("Сity " + cityName + " not found!");
         } finally {
             if (bufferedReader != null) {
                 try {
@@ -124,7 +171,7 @@ public class Controller {
                 }
             }
         }
-        return content.toString();
+        return urlResponse.toString();
 
     }
 }
