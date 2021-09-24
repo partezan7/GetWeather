@@ -4,9 +4,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.*;
-import java.util.Calendar;
-
-
+import java.time.LocalDateTime;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -50,17 +48,14 @@ public class Controller {
 
     @FXML
     void initialize() {
-
         buttonGetData.setOnAction(event -> getWeather(textFieldCity.getText()));
         buttonMoscow.setOnAction(event -> getWeather(buttonMoscow.getText()));
         buttonSpb.setOnAction(event -> getWeather(buttonSpb.getText()));
-
     }
 
 
     private void getWeather(String city) {
-        cityName = city.trim();
-        counter++;
+        cityName = city.trim();//return string without spaces
 
         String response = getUrlResponse(
                 "http://api.openweathermap.org/data/2.5/weather?q=" +
@@ -78,13 +73,13 @@ public class Controller {
             DBjdbc dbJDBC = new DBjdbc();
             Connection connection = dbJDBC.getConnection();
 
-            String createTableString = "create table if not exists weatherlog (" +
+            String CREATE_TABLE = "create table if not exists weatherlog (" +
                     " weatherlog_id int not null AUTO_INCREMENT," +
                     " city varchar(30) not null," +
                     " temp FLOAT not null," +
                     " pressure FLOAT not null," +
-                    " date DATE not null," +
-                    " primary key (weatherlog_ID)" +
+                    " date DATETIME not null," +
+                    " primary key (weatherlog_id)" +
                     ")" +
                     " ENGINE=MyISAM  DEFAULT  charset=utf8";
 
@@ -94,19 +89,30 @@ public class Controller {
 
             try {
                 Statement statement = connection.createStatement();
-                statement.executeUpdate(createTableString);
+                statement.execute(CREATE_TABLE);
+
+                ResultSet resultSet = statement.executeQuery("SELECT count(*)  FROM weatherlog;");
+                while (resultSet.next()) {
+                    counter = resultSet.getInt("count(*)");
+                }
+
                 preparedStatement = connection.prepareStatement(INSERT_NEW);
-                preparedStatement.setInt(1, counter);
-                preparedStatement.setString(2, city);
+                preparedStatement.setInt(1, ++counter);
+                preparedStatement.setString(2, city.trim());
                 preparedStatement.setFloat(3, obj.getJSONObject("main").getFloat("temp"));
                 preparedStatement.setFloat(4, obj.getJSONObject("main").getFloat("pressure") / 133 * 100);
-                preparedStatement.setDate(5, new Date(Calendar.getInstance().getTimeInMillis()));
+                preparedStatement.setObject(5, LocalDateTime.now());
+
                 preparedStatement.execute();
+                statement.close();
+                preparedStatement.close();
+
             } catch (SQLException throwables) {
                 System.out.println("SQL Exception!");
                 throwables.printStackTrace();
             } finally {
                 try {
+
                     dbJDBC.getConnection().close();
                 } catch (SQLException throwables) {
                     System.out.println("Failed to close connection!");
