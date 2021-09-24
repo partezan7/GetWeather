@@ -3,33 +3,20 @@ package main.java.ru.partezan7.controller;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-<<<<<<< HEAD
 import java.sql.*;
 import java.util.Calendar;
-=======
->>>>>>> 6c9be77c627b46c6c1eb1f9ccb0ba4b9121d1919
-
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-<<<<<<< HEAD
 import main.java.ru.partezan7.util.DBjdbc;
-=======
->>>>>>> 6c9be77c627b46c6c1eb1f9ccb0ba4b9121d1919
 import org.json.JSONObject;
 
 
 public class Controller {
 
-<<<<<<< HEAD
     private static String cityName = "";
     private static int counter = 0;
-=======
-    private static String userCity = "";
->>>>>>> 6c9be77c627b46c6c1eb1f9ccb0ba4b9121d1919
-
 
     @FXML
     private TextField textFieldCity;
@@ -60,16 +47,13 @@ public class Controller {
 
     @FXML
     void initialize() {
-
         buttonGetData.setOnAction(event -> getWeather(textFieldCity.getText()));
         buttonMoscow.setOnAction(event -> getWeather(buttonMoscow.getText()));
         buttonSpb.setOnAction(event -> getWeather(buttonSpb.getText()));
-
     }
 
 
     private void getWeather(String city) {
-<<<<<<< HEAD
         cityName = city.trim();
         counter++;
 
@@ -128,39 +112,18 @@ public class Controller {
         }
     }
 
-
     private String getAppID() {
-=======
-        userCity = city.trim();
 
-        String output = getUrlContent(
-                "http://api.openweathermap.org/data/2.5/weather?q=" +
-                        userCity + "&appid=" + getAppID() + "&units=metric");
-
-        if (!output.isEmpty()) {
-            JSONObject obj = new JSONObject(output);
-            temp_info.setText("Температура: " + Math.round(obj.getJSONObject("main").getDouble("temp")) + "\u00B0");
-            temp_feels.setText("Ощущается: " + Math.round(obj.getJSONObject("main").getDouble("feels_like"))+ "\u00B0");
-            temp_max.setText("Максимум: " + Math.round(obj.getJSONObject("main").getDouble("temp_max"))+ "\u00B0");
-            temp_min.setText("Минимум: " + Math.round(obj.getJSONObject("main").getDouble("temp_min"))+ "\u00B0");
-            pressure.setText("Давление: " + Math.round((obj.getJSONObject("main").getDouble("pressure")/133*100))+" мм.рт.ст.");
-        }
-    }
-
-    private static String getAppID() {
->>>>>>> 6c9be77c627b46c6c1eb1f9ccb0ba4b9121d1919
         StringBuilder appID = new StringBuilder();
         BufferedReader reader = null;
         String path = new File("").getAbsolutePath();
 
         try {
             reader = new BufferedReader(new FileReader(new File(path + "\\src\\main\\resources\\ru\\partezan7\\AppID")));
-
             String line;
             while ((line = reader.readLine()) != null) {
                 appID.append(line);
             }
-
             reader.close();
         } catch (IOException e) {
             System.out.println("File not found!");
@@ -176,38 +139,21 @@ public class Controller {
         return appID.toString();
     }
 
-<<<<<<< HEAD
+
     private static String getUrlResponse(String urlRequest) {
         StringBuilder urlResponse = new StringBuilder();
         BufferedReader bufferedReader = null;
         try {
             URL url = new URL(urlRequest);
-=======
-    private static String getUrlContent(String urlAdress) {
-        StringBuilder content = new StringBuilder();
-        BufferedReader bufferedReader = null;
-        try {
-            URL url = new URL(urlAdress);
->>>>>>> 6c9be77c627b46c6c1eb1f9ccb0ba4b9121d1919
             URLConnection urlConnection = url.openConnection();
             bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
             String line;
-
             while ((line = bufferedReader.readLine()) != null) {
-<<<<<<< HEAD
                 urlResponse.append(line + "\n");
             }
             bufferedReader.close();
         } catch (IOException e) {
             System.out.println("Сity " + cityName + " not found!");
-=======
-                content.append(line + "\n");
-            }
-            bufferedReader.close();
-        } catch (IOException e) {
-            System.out.println("Сity " + userCity + " not found!");
->>>>>>> 6c9be77c627b46c6c1eb1f9ccb0ba4b9121d1919
         } finally {
             if (bufferedReader != null) {
                 try {
@@ -217,11 +163,6 @@ public class Controller {
                 }
             }
         }
-<<<<<<< HEAD
         return urlResponse.toString();
-=======
-        return content.toString();
->>>>>>> 6c9be77c627b46c6c1eb1f9ccb0ba4b9121d1919
-
     }
 }
