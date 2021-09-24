@@ -5,6 +5,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.sql.*;
 import java.util.Calendar;
+
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -17,6 +19,7 @@ public class Controller {
 
     private static String cityName = "";
     private static int counter = 0;
+
 
     @FXML
     private TextField textFieldCity;
@@ -47,9 +50,11 @@ public class Controller {
 
     @FXML
     void initialize() {
+
         buttonGetData.setOnAction(event -> getWeather(textFieldCity.getText()));
         buttonMoscow.setOnAction(event -> getWeather(buttonMoscow.getText()));
         buttonSpb.setOnAction(event -> getWeather(buttonSpb.getText()));
+
     }
 
 
@@ -88,7 +93,6 @@ public class Controller {
             PreparedStatement preparedStatement = null;
 
             try {
-                System.out.println(createTableString);
                 Statement statement = connection.createStatement();
                 statement.executeUpdate(createTableString);
                 preparedStatement = connection.prepareStatement(INSERT_NEW);
@@ -112,18 +116,20 @@ public class Controller {
         }
     }
 
-    private String getAppID() {
 
+    private String getAppID() {
         StringBuilder appID = new StringBuilder();
         BufferedReader reader = null;
         String path = new File("").getAbsolutePath();
 
         try {
             reader = new BufferedReader(new FileReader(new File(path + "\\src\\main\\resources\\ru\\partezan7\\AppID")));
+
             String line;
             while ((line = reader.readLine()) != null) {
                 appID.append(line);
             }
+
             reader.close();
         } catch (IOException e) {
             System.out.println("File not found!");
@@ -139,7 +145,6 @@ public class Controller {
         return appID.toString();
     }
 
-
     private static String getUrlResponse(String urlRequest) {
         StringBuilder urlResponse = new StringBuilder();
         BufferedReader bufferedReader = null;
@@ -147,7 +152,9 @@ public class Controller {
             URL url = new URL(urlRequest);
             URLConnection urlConnection = url.openConnection();
             bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+
             String line;
+
             while ((line = bufferedReader.readLine()) != null) {
                 urlResponse.append(line + "\n");
             }
@@ -164,5 +171,6 @@ public class Controller {
             }
         }
         return urlResponse.toString();
+
     }
 }
