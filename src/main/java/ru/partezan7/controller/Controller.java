@@ -5,11 +5,15 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.sql.*;
 import java.time.LocalDateTime;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import main.java.ru.partezan7.entity.Weatherlog;
 import main.java.ru.partezan7.util.DBjdbc;
+import main.java.ru.partezan7.util.HibernateUtil;
+import org.hibernate.Session;
 import org.json.JSONObject;
 
 
@@ -90,35 +94,46 @@ public class Controller {
             try {
                 Statement statement = connection.createStatement();
                 statement.execute(CREATE_TABLE);
-
                 ResultSet resultSet = statement.executeQuery("SELECT count(*)  FROM weatherlog;");
                 while (resultSet.next()) {
                     counter = resultSet.getInt("count(*)");
                 }
-
-                preparedStatement = connection.prepareStatement(INSERT_NEW);
-                preparedStatement.setInt(1, ++counter);
-                preparedStatement.setString(2, city.trim());
-                preparedStatement.setFloat(3, obj.getJSONObject("main").getFloat("temp"));
-                preparedStatement.setFloat(4, obj.getJSONObject("main").getFloat("pressure") / 133 * 100);
-                preparedStatement.setObject(5, LocalDateTime.now());
-
-                preparedStatement.execute();
                 statement.close();
-                preparedStatement.close();
+
+//                preparedStatement = connection.prepareStatement(INSERT_NEW);
+//                preparedStatement.setInt(1, ++counter);
+//                preparedStatement.setString(2, city.trim());
+//                preparedStatement.setFloat(3, obj.getJSONObject("main").getFloat("temp"));
+//                preparedStatement.setFloat(4, obj.getJSONObject("main").getFloat("pressure") / 133 * 100);
+//                preparedStatement.setObject(5, LocalDateTime.now());
+//                preparedStatement.execute();
+//
+//                preparedStatement.close();
 
             } catch (SQLException throwables) {
                 System.out.println("SQL Exception!");
                 throwables.printStackTrace();
             } finally {
                 try {
-
                     dbJDBC.getConnection().close();
                 } catch (SQLException throwables) {
                     System.out.println("Failed to close connection!");
                     throwables.printStackTrace();
                 }
             }
+
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            session.getTransaction().begin();
+
+            Weatherlog weatherlog = new Weatherlog();
+            weatherlog.setCity(city.trim());
+            weatherlog.setTemp(obj.getJSONObject("main").getFloat("temp"));
+            weatherlog.setPressure(obj.getJSONObject("main").getFloat("pressure") / 133 * 100);
+            weatherlog.setDate(Timestamp.valueOf(LocalDateTime.now()));
+
+            session.save(weatherlog);
+            session.getTransaction().commit();
+            session.close();
         }
     }
 
